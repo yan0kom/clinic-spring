@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/clinic
+    username: clinic
+    password: clinic_pass
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: update
+jwt:
+  client-id: clinic202006
+  client-secret: 06ca757a-00ed-313f-a33f-f187ebbc1950
+  access-token-validitity-seconds: 3600 # 1 hour
+  refresh-token-validity-seconds: 18000 # 5 hours
+  authorized-grant-types: password,authorization_code,refresh_token
