@@ -94,7 +94,7 @@ public class AdminControllerTest extends ControllerTestBase {
     @Test
     public void listPriveleges_Success() throws Exception {
         List<?> privelegesList = fromRequest(addToken(get("/api/admin/privileges"), adminToken), List.class);
-        assertEquals(Privileges.getAllPrivileges().size(), privelegesList.size());
+        assertEquals(Privileges.getPrivilegesSet().size(), privelegesList.size());
     }
 
     @Test

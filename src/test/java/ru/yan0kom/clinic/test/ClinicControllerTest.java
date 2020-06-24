@@ -45,7 +45,7 @@ public class ClinicControllerTest extends ControllerTestBase {
     @BeforeAll
     public void setup() throws Exception {
         TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
-        AppRole role = adminService.addRole(new RoleInDto("su", new ArrayList<>(Privileges.getAllPrivileges())));
+        AppRole role = adminService.addRole(new RoleInDto("su", new ArrayList<>(Privileges.getPrivilegesSet())));
         adminService.addUser(new UserInDto("su", "su-pass", role.getId()));
 
         suToken = fromRequest(
