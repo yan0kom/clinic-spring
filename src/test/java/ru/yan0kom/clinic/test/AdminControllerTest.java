@@ -1,24 +1,31 @@
 package ru.yan0kom.clinic.test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.yan0kom.clinic.dto.RoleInDto;
 import ru.yan0kom.clinic.dto.UserInDto;
 import ru.yan0kom.clinic.model.AppRole;
 import ru.yan0kom.clinic.model.AppUser;
 import ru.yan0kom.clinic.security.Privileges;
 import ru.yan0kom.clinic.service.AdminService;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AdminControllerTest extends ControllerTestBase {
     @Autowired
@@ -67,27 +74,27 @@ public class AdminControllerTest extends ControllerTestBase {
     public void whenNoPrivilege_thenFail() throws Exception {
         RoleInDto roleInDto = new RoleInDto("dummy", Arrays.asList("dummy"));
         UserInDto userInDto = new UserInDto("dummy", "dummy", -1L);
-        mvc.perform(addToken(get("/api/admin/privileges"), doctorToken)).andExpect(status().isForbidden());
-        mvc.perform(addToken(setBody(post("/api/admin/roles"), roleInDto), doctorToken))
+        mvcPerform(get("/api/admin/privileges"), doctorToken).andExpect(status().isForbidden());
+        mvcPerform(setBody(post("/api/admin/roles"), roleInDto), doctorToken)
                 .andExpect(status().isForbidden());
-        mvc.perform(addToken(get("/api/admin/roles/1"), doctorToken)).andExpect(status().isForbidden());
-        mvc.perform(addToken(get("/api/admin/roles"), doctorToken)).andExpect(status().isForbidden());
-        mvc.perform(addToken(setBody(put("/api/admin/roles/1"), roleInDto), doctorToken))
+        mvcPerform(get("/api/admin/roles/1"), doctorToken).andExpect(status().isForbidden());
+        mvcPerform(get("/api/admin/roles"), doctorToken).andExpect(status().isForbidden());
+        mvcPerform(setBody(put("/api/admin/roles/1"), roleInDto), doctorToken)
                 .andExpect(status().isForbidden());
-        mvc.perform(addToken(delete("/api/admin/roles/1"), doctorToken)).andExpect(status().isForbidden());
-        mvc.perform(addToken(setBody(post("/api/admin/users"), userInDto), doctorToken))
+        mvcPerform(delete("/api/admin/roles/1"), doctorToken).andExpect(status().isForbidden());
+        mvcPerform(setBody(post("/api/admin/users"), userInDto), doctorToken)
                 .andExpect(status().isForbidden());
-        mvc.perform(addToken(get("/api/admin/users/1"), doctorToken)).andExpect(status().isForbidden());
-        mvc.perform(addToken(get("/api/admin/users"), doctorToken)).andExpect(status().isForbidden());
-        mvc.perform(addToken(setBody(put("/api/admin/users/1"), userInDto), doctorToken))
+        mvcPerform(get("/api/admin/users/1"), doctorToken).andExpect(status().isForbidden());
+        mvcPerform(get("/api/admin/users"), doctorToken).andExpect(status().isForbidden());
+        mvcPerform(setBody(put("/api/admin/users/1"), userInDto), doctorToken)
                 .andExpect(status().isForbidden());
-        mvc.perform(addToken(delete("/api/admin/users/1"), doctorToken)).andExpect(status().isForbidden());
+        mvcPerform(delete("/api/admin/users/1"), doctorToken).andExpect(status().isForbidden());
     }
 
     @Test
     public void listPriveleges_Success() throws Exception {
-        List privelegesList = fromRequest(addToken(get("/api/admin/privileges"), adminToken), List.class);
-        assertEquals(Privileges.getPrivilegesSet().size(), privelegesList.size());
+        List<?> privelegesList = fromRequest(addToken(get("/api/admin/privileges"), adminToken), List.class);
+        assertEquals(Privileges.getAllPrivileges().size(), privelegesList.size());
     }
 
     @Test

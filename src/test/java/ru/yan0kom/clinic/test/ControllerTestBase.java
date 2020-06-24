@@ -1,8 +1,7 @@
 package ru.yan0kom.clinic.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -40,6 +42,10 @@ public class ControllerTestBase {
         return fromMvcResult(mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn(), valueType);
     }
 
+    protected <T> T fromRequest(MockHttpServletRequestBuilder requestBuilder, String token, Class<T> valueType) throws Exception {
+        return fromMvcResult(mvcPerform(requestBuilder, token).andExpect(status().isOk()).andReturn(), valueType);
+    }
+
     protected <T> T fromRequest(MockHttpServletRequestBuilder requestBuilder, TypeReference<T> typeRef) throws Exception {
         return fromMvcResult(mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn(), typeRef);
     }
@@ -54,5 +60,9 @@ public class ControllerTestBase {
 
     protected MockHttpServletRequestBuilder addToken(MockHttpServletRequestBuilder requestBuilder, String token) {
         return requestBuilder.header("Authorization", String.format("Bearer %s", token));
+    }
+
+    protected ResultActions mvcPerform(MockHttpServletRequestBuilder requestBuilder, String token) throws Exception {
+        return mvc.perform(addToken(requestBuilder, token));
     }
 }
