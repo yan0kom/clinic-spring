@@ -1,5 +1,12 @@
 package ru.yan0kom.clinic.service;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import ru.yan0kom.clinic.dao.RoleDao;
 import ru.yan0kom.clinic.dao.UserDao;
 import ru.yan0kom.clinic.dto.RoleInDto;
@@ -15,12 +23,6 @@ import ru.yan0kom.clinic.error.EntityNotFoundException;
 import ru.yan0kom.clinic.model.AppRole;
 import ru.yan0kom.clinic.model.AppUser;
 import ru.yan0kom.clinic.security.Privileges;
-
-import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class AdminService extends BaseService implements UserDetailsService {

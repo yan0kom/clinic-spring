@@ -1,11 +1,11 @@
 package ru.yan0kom.clinic.security;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class Privileges {
     public static final String clinic_patients_create = "clinic.patients.create";
@@ -32,7 +32,7 @@ public class Privileges {
     public static final String admin_users_read = "admin.users.read";
     public static final String admin_users_update = "admin.users.update";
     public static final String admin_users_delete = "admin.users.delete";
-    
+
     private static final Set<String> privilegesSet;
 
     private Privileges() {}
