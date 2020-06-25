@@ -53,7 +53,7 @@ public class AdminService extends BaseService implements UserDetailsService {
                 Privileges.admin_users_read,
                 Privileges.admin_users_update,
                 Privileges.admin_users_delete)));
-        addUser(new UserInDto("admin", "admin", role.getId()));
+        addUser(new UserInDto(null, "admin", "admin", role.getId()));
 
         addRole(new RoleInDto("doctor", Arrays.asList(
                 Privileges.clinic_patients_create,

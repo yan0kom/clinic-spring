@@ -46,7 +46,7 @@ public class ClinicControllerTest extends ControllerTestBase {
     public void setup() throws Exception {
         TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
         AppRole role = adminService.addRole(new RoleInDto("su", new ArrayList<>(Privileges.getPrivilegesSet())));
-        adminService.addUser(new UserInDto("su", "su-pass", role.getId()));
+        adminService.addUser(new UserInDto(null, "su", "su-pass", role.getId()));
 
         suToken = fromRequest(
                 post("/oauth/token")

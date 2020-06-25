@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,8 +73,8 @@ public class AdminControllerTest extends ControllerTestBase {
 
     @Test
     public void whenNoPrivilege_thenFail() throws Exception {
-        RoleInDto roleInDto = new RoleInDto("dummy", Arrays.asList("dummy"));
-        UserInDto userInDto = new UserInDto("dummy", "dummy", -1L);
+        RoleInDto roleInDto = new RoleInDto("dummy", Collections.emptyList());
+        UserInDto userInDto = new UserInDto(0L, "dummy", "dummy", -1L);
         mvcPerform(get("/api/admin/privileges"), doctorToken).andExpect(status().isForbidden());
         mvcPerform(setBody(post("/api/admin/roles"), roleInDto), doctorToken)
                 .andExpect(status().isForbidden());
@@ -145,7 +146,7 @@ public class AdminControllerTest extends ControllerTestBase {
     }
 
     private AppUser createUser(String username, String password, Long roleId) throws Exception {
-        UserInDto body = new UserInDto(username, password, roleId);
+        UserInDto body = new UserInDto(null, username, password, roleId);
         AppUser user = fromRequest(addToken(setBody(post("/api/admin/users"), body), adminToken), AppUser.class);
         assertNotNull(user.getId());
         assertEquals(username, user.getUsername());

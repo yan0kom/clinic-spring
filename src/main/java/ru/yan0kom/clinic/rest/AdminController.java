@@ -3,6 +3,8 @@ package ru.yan0kom.clinic.rest;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,8 @@ import ru.yan0kom.clinic.model.AppRole;
 import ru.yan0kom.clinic.model.AppUser;
 import ru.yan0kom.clinic.security.Privileges;
 import ru.yan0kom.clinic.service.AdminService;
+import ru.yan0kom.clinic.validation.UserInDtoConstraint;
+import ru.yan0kom.clinic.validation.ValidationPurpose;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -44,7 +48,7 @@ public class AdminController {
     @Operation(summary = "Create role with given priveleges", description = "Required privelege: "+Privileges.admin_roles_create, tags = {"admin"})
     @PostMapping("roles")
     @Secured(Privileges.admin_roles_create)
-    public AppRole addRole(@RequestBody RoleInDto roleInDto) {
+    public AppRole addRole(@Valid @RequestBody RoleInDto roleInDto) {
         return adminService.addRole(roleInDto);
     }
 
@@ -67,7 +71,7 @@ public class AdminController {
     @ApiResponses(value = {@ApiResponse(responseCode = "404", description = "Role not found", content = @Content) })
     @PutMapping("roles/{id}")
     @Secured(Privileges.admin_roles_update)
-    public AppRole updateRole(@PathVariable Long id, @RequestBody RoleInDto roleInDto) {
+    public AppRole updateRole(@PathVariable Long id, @Valid @RequestBody RoleInDto roleInDto) {
         return adminService.updateRole(id, roleInDto);
     }
 
@@ -82,7 +86,7 @@ public class AdminController {
     @Operation(summary = "Create user", description = "Required privelege: "+Privileges.admin_users_create, tags = {"admin"})
     @PostMapping("users")
     @Secured(Privileges.admin_users_create)
-    public AppUser addUser(@RequestBody UserInDto userInDto) {
+    public AppUser addUser(@Valid @UserInDtoConstraint(purpose = ValidationPurpose.CREATE) @RequestBody UserInDto userInDto) {
         return adminService.addUser(userInDto);
     }
 
@@ -105,7 +109,7 @@ public class AdminController {
     @ApiResponses(value = {@ApiResponse(responseCode = "404", description = "User not found", content = @Content) })
     @PutMapping("users/{id}")
     @Secured(Privileges.admin_users_update)
-    public AppUser updateUser(@PathVariable Long id, @RequestBody UserInDto userInDto) {
+    public AppUser updateUser(@PathVariable Long id, @Valid @UserInDtoConstraint(purpose = ValidationPurpose.UPDATE) @RequestBody UserInDto userInDto) {
         return adminService.updateUser(id, userInDto);
     }
 
