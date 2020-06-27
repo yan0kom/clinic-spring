@@ -6,17 +6,19 @@ import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.yan0kom.clinic.dao.RoleDao;
 import ru.yan0kom.clinic.dao.UserDao;
 import ru.yan0kom.clinic.dto.UserInDto;
 
+@Slf4j
 public class UserInDtoConstraintValidator implements ConstraintValidator<UserInDtoConstraint, UserInDto> {
     @Autowired
     private UserDao userDao;
     @Autowired
     private RoleDao roleDao;
 
-    private boolean hasConstraintViolation = false;
+    private boolean hasConstraintViolation;
     private ValidationPurpose validationPurpose;
 
     @Override
@@ -27,7 +29,9 @@ public class UserInDtoConstraintValidator implements ConstraintValidator<UserInD
 
     @Override
     public boolean isValid(UserInDto user, ConstraintValidatorContext context) {
-        context.disableDefaultConstraintViolation();
+        log.debug("Validate {}", user);
+
+        hasConstraintViolation = false;
 
         if (validationPurpose == ValidationPurpose.UPDATE) {
             if (user.getId() == null) {
@@ -43,7 +47,7 @@ public class UserInDtoConstraintValidator implements ConstraintValidator<UserInD
             addConstraintViolation(context, "username", "{constraints.MaxLength.message} 100");
         } else if (validationPurpose == ValidationPurpose.CREATE && userDao.findByUsername(user.getUsername()).isPresent()) {
             addConstraintViolation(context, "username", "{constraints.Unique.message}");
-        } else if (validationPurpose == ValidationPurpose.UPDATE &&
+        } else if (validationPurpose == ValidationPurpose.UPDATE && user.getId() != null &&
                 (userDao.findById(user.getId()).get().getUsername().equals(user.getUsername()) ||
                         !userDao.findByUsername(user.getUsername()).isPresent())) {
             addConstraintViolation(context, "username", "{constraints.Unique.message}");
@@ -61,6 +65,10 @@ public class UserInDtoConstraintValidator implements ConstraintValidator<UserInD
             addConstraintViolation(context, "roleId", "{javax.validation.constraints.NotNull.message}");
         } else if (!roleDao.existsById(user.getRoleId())) {
             addConstraintViolation(context, "roleId", "{constraints.EntityNotFound.message}");
+        }
+
+        if (hasConstraintViolation) {
+          context.disableDefaultConstraintViolation();
         }
 
         return !hasConstraintViolation;

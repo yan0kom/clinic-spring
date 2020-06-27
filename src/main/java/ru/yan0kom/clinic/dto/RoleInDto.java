@@ -3,6 +3,7 @@ package ru.yan0kom.clinic.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,7 @@ public class RoleInDto {
     private String name;
 
     @Schema(description = "List of the role priveleges", example = "[\"clinic.patients.read\", \"clinic.doctors.read\"]", required = true)
+    @NotNull
     @PrivilegesListConstraint
     private List<String> privileges;
 }

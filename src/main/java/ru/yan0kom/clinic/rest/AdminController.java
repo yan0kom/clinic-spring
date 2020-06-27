@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import ru.yan0kom.clinic.validation.ValidationPurpose;
 
 @RestController
 @RequestMapping("/api/admin")
+@Validated
 @Tag(name = "admin", description = "API to manage users, roles and their privileges")
 @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success")})
 public class AdminController {
@@ -86,7 +88,7 @@ public class AdminController {
     @Operation(summary = "Create user", description = "Required privelege: "+Privileges.admin_users_create, tags = {"admin"})
     @PostMapping("users")
     @Secured(Privileges.admin_users_create)
-    public AppUser addUser(@Valid @UserInDtoConstraint(purpose = ValidationPurpose.CREATE) @RequestBody UserInDto userInDto) {
+    public AppUser addUser(@UserInDtoConstraint(purpose = ValidationPurpose.CREATE) @RequestBody UserInDto userInDto) {
         return adminService.addUser(userInDto);
     }
 
@@ -109,7 +111,7 @@ public class AdminController {
     @ApiResponses(value = {@ApiResponse(responseCode = "404", description = "User not found", content = @Content) })
     @PutMapping("users/{id}")
     @Secured(Privileges.admin_users_update)
-    public AppUser updateUser(@PathVariable Long id, @Valid @UserInDtoConstraint(purpose = ValidationPurpose.UPDATE) @RequestBody UserInDto userInDto) {
+    public AppUser updateUser(@PathVariable Long id, @UserInDtoConstraint(purpose = ValidationPurpose.UPDATE) @RequestBody UserInDto userInDto) {
         return adminService.updateUser(id, userInDto);
     }
 
