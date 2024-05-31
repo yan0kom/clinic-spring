@@ -6,8 +6,8 @@ plugins {
     id("com.github.johnrengelman.processes") version "0.5.0"
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 group = 'ru.yan0kom'
 version = '0.1'
@@ -32,8 +32,8 @@ dependencies {
     implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.8.RELEASE'    
     implementation 'org.springdoc:springdoc-openapi-ui:1.4.1'    
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     runtimeOnly 'org.postgresql:postgresql'
 
